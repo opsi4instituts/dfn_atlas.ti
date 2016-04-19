@@ -1,0 +1,86 @@
+; This sourcecode published under the Terms of the General Public License.
+; Written by Eric Esser, Wissenschaftszentrum Berlin, eric.esser@wzb.eu.
+; Inspired by uib gmbh (www.uib.de), Thomas Besser (KIT), Detlef Krummel (GEI) and Tobias Friede (Fraunhofer)
+
+setloglevel = 6
+;  Log Errors in Logfile but don't abort:
+ExitOnError=false
+; Show syntax errors in the script:
+ScriptErrorMessages=on
+; Dont trace step by step through the script:
+TraceMode=off
+; let started programs run in front of the winst window
+StayOnTop=false
+
+requiredWinstVersion >= "4.11.5.0"
+
+;==========================================================================================================
+; Includes
+include_insert "insert_check_exit_code.opsiinc"
+include_insert "insert_get_licensekey.opsiinc"
+include_append "section_linkfolder.opsiinc"
+
+;==========================================================================================================
+; Variables 
+
+DefVar $LogDir$
+DefVar $ProductId$ 
+DefVar $PrettyName$
+DefVar $MinimumSpace$
+DefVar $InstallDir$
+DefVar $KindOfLicense$ 
+
+DefVar $PathToExe$
+DefVar $DesktopIconName$
+DefVar $Property_DesktopIcon$
+DefVar $ProgramVersion$	
+DefVar $Exe$	
+
+;----------------------------------------------------------------------------------------------
+; USUALLY FOR AN PROGRAM UPDATE THIS IS THE ONLY PLACE WHERE VALUES OUGHT TO BE CHANGED, EXCEPT PUTTING THE OLD MSI-ID TO DELSUB
+; Setting common variables
+
+Set $ProductId$                    = "dfn_atlas.ti"
+Set $PrettyName$		               = "ATLAS.ti"
+Set $MinimumSpace$                 = "500 MB"
+Set $InstallDir$                   = "%ProgramFiles32Dir%\Scientific Software\ATLASti"
+Set $Exe$							             = "atlasti.exe"
+
+; There are two more variables to set which are not here, but in setup.opsiscript ($SetupFile$) and uninstall.opsiscript ($UninstallSearchString$)
+;----------------------------------------------------------------------------------------------
+; Further common values. After an update, these should stay as they are.
+
+Set $ProgramVersion$               = strPart("%installingProdVersion%", "1", calculate(strPos("%installingProdVersion%","-") + "-" + "1" ))
+Set $LogDir$                       = "%SystemDrive%\tmp"
+Set $Property_DesktopIcon$         = GetProductProperty("desktopicon", "true")
+Set $DesktopIconName$ 				 		 = $PrettyName$ 
+Set $PathToExe$         				 	 = $InstallDir$ + "\Program\" + $Exe$
+          
+
+;==========================================================================================================
+; Program logic
+
+comment "Show product picture"
+ShowBitmap "%ScriptPath%\" + $ProductId$ + ".png" $PrettyName$
+
+; Kill running task
+Killtask $Exe$
+
+Set $KindOfLicense$ = GetProductProperty("kind-of-license" , "testversion" )
+Switch $KindOfLicense$
+    Case "testversion"
+        Set $LicenseKey$ = ""
+    EndCase
+    Case "opsi-property"
+        Set $LicenseKey$ = GetProductProperty("licensekey", "none" )
+        if (($LicenseKey$ = "") or ($LicenseKey$ = "none"))
+          LogError "No license key found in OPSI, though kind-of-license property set to opsi-property. Please enter valid license key in OPSI or change the kind of licensing."
+          isFatalError "No license key found in OPSI, though kind-of-license property set to opsi-property"
+        endif
+    EndCase
+    Case  "licensepool" 
+        Set $LicensePool$ = GetProductProperty("licensepoolname" , "p_" + $ProductId$ )
+        Sub_get_licensekey                             
+    EndCase
+EndSwitch
+

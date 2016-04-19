@@ -1,0 +1,81 @@
+[Package]
+version: 1
+depends: 
+incremental: False
+
+[Product]
+type: localboot
+id: dfn_atlas.ti
+name: ATLAS.ti
+description: ATLAS.ti ist ein Programm zur Auswertung von qualitativen Daten wie Text, Bild, Audio, Video oder auch GoogleEarth Geodaten.
+advice: Das Programm deinstalliert saemtliche frueeren Versionen von Atlas.ti bei der Installation.
+version: 7.5.10.0
+priority: 0
+licenseRequired: True
+productClasses: 
+setupScript: setup.opsiscript
+uninstallScript: uninstall.opsiscript
+updateScript: 
+alwaysScript: 
+onceScript: 
+customScript: 
+userLoginScript: 
+
+[ProductProperty]
+type: bool
+name: desktopicon
+description: Generate or delete desktop icon.
+default: True
+
+[ProductProperty]
+type: unicode
+name: custom-post-install
+multivalue: False
+editable: False
+description: Define filename for include script in custom directory after installation
+values: ["none", "post-install.opsiinc"]
+default: ["none"]
+
+[ProductProperty]
+type: unicode
+name: custom-post-deinstall
+multivalue: False
+editable: False
+description: Define filename for include script in custom directory after deinstallation
+values: ["none", "post-deinstall.opsiinc"]
+default: ["none"]
+
+[ProductProperty]
+type: unicode
+name: kind-of-license
+multivalue: False
+editable: False
+description: Defines the kind of license: "opsi-property" takes the license key from the property "licensekey", "licensepool" uses the cofinanced module of OPSI. The license pool can be specified in the property "licensepoolname" and  "testversion" installs ATLAS.ti as test version.
+values: ["licensepool", "opsi-property", "testversion"]
+default: ["testversion"]
+
+[ProductProperty]
+type: unicode
+name: licensekey
+multivalue: False
+editable: True
+description: The license key for your ATLAS.ti installation. Only needed if the property "kind-of-license" is set to "licensekey".
+values: ["none"]
+default: ["none"]
+
+[ProductProperty]
+type: unicode
+name: licensepoolname
+multivalue: False
+editable: True
+description: The license pool name for OPSI license module. Only needed if the property "kind-of-license" is set to "licensepool".
+values: [""]
+default: [""]
+
+[Changelog]
+atlas.ti7 (7.1.1-1) testing; urgency=low
+
+  * Initial package
+
+ -- Eric Esser <esser@wzb.eu>  Wed, 07 Aug 2013 17:34:07 +0000
+
