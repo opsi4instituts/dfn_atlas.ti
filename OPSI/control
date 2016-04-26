@@ -1,5 +1,5 @@
 [Package]
-version: 1
+version: 2
 depends: 
 incremental: False
 
@@ -78,4 +78,3 @@ atlas.ti7 (7.1.1-1) testing; urgency=low
   * Initial package
 
  -- Eric Esser <esser@wzb.eu>  Wed, 07 Aug 2013 17:34:07 +0000
-

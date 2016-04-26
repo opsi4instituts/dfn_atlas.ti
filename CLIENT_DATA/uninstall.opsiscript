@@ -17,8 +17,6 @@ Set $UninstallSearchString$ = "ATLAS.ti"
 ;==========================================================================================================
 ; Program logic
 
-comment "Show product picture"
-ShowBitmap "%ScriptPath%\" + $ProductId$ + ".png" $ProductId$
 Message "Uninstalling " + $ProductId$ + " ..."
 
 ; Sub function in section_uninstall_by_registry.opsiinc - variable set in commons.opsiinc
