@@ -27,7 +27,7 @@ else
 	ChangeDirectory "%SCRIPTPATH%"
 	Winbatch_install
 	Sub_check_exitcode
-	
+
 	; Setting the desktop icon or removing it - as set in the config editor
   if $Property_DesktopIcon$ = "True"
     LinkFolder_create
