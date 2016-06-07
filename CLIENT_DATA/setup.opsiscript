@@ -11,9 +11,9 @@ include_insert "common.opsiinc"
 ;==========================================================================================================
 ; Variables
 DefVar $CustomPostInstall$
-DefVar $SetupFile$
-Set $SetupFile$ = "a7setup.msi"
+DefVar $SetupString$ 
 
+Set $SetupString$ = "%ScriptPath%\a7setup.msi" 
 ;==========================================================================================================
 ; Program logic
 if not(HasMinimumSpace ("%SystemDrive%", $MinimumSpace$))
@@ -25,8 +25,14 @@ else
 	
 	comment "Start setup program"
 	ChangeDirectory "%SCRIPTPATH%"
-	Winbatch_install
-	Sub_check_exitcode
+	
+  if FileExists($SetupString$)
+    Winbatch_install
+	  Sub_check_exitcode
+	else
+	  LogError "No setup file found, please check the OPSI package"
+	  isFatalError "No Setup file found"
+	endif
 
 	; Setting the desktop icon or removing it - as set in the config editor
   if $Property_DesktopIcon$ = "True"
@@ -49,4 +55,4 @@ endif
 ; Functions
 
 [Winbatch_install]
-msiexec /i "%ScriptPath%\$SetupFile$" /l* "$LogDir$\$ProductId$.install_log.txt" /qb! INSTALLDIR="$InstallDir$" PIDKEY="$LicenseKey$" ALLUSERS=1 REBOOT=ReallySuppress
+msiexec /i "$SetupString$" /l* "$LogDir$\$ProductId$.install_log.txt" /qb! INSTALLDIR="$InstallDir$" PIDKEY="$LicenseKey$" ALLUSERS=1 REBOOT=ReallySuppress
