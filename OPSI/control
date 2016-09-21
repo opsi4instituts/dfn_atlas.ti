@@ -9,7 +9,7 @@ id: dfn_atlas.ti
 name: ATLAS.ti
 description: ATLAS.ti ist ein Programm zur Auswertung von qualitativen Daten wie Text, Bild, Audio, Video oder auch GoogleEarth Geodaten.
 advice: Das Programm deinstalliert saemtliche frueeren Versionen von Atlas.ti bei der Installation.
-version: 7.5.12.0
+version: 7.5.15.0
 priority: 0
 licenseRequired: True
 productClasses: 
