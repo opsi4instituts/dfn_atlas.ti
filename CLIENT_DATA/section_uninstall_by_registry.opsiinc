@@ -17,13 +17,9 @@ if ($InstallationSystemType$ = "64 Bit System")
    for %uninstallkey% in $UninstallKeys$ do sub_check_uninstall_key
 endif
 
-if (count($UninstallStrings$) = "0")
-  LogError "No uninstall string found in registry. Please try manual deinstallation on this machine"
-  isFatalError "No uninstall string found in registry."
+if (not(count($UninstallStrings$) = "0"))
+	for %uninstallstring% in $UninstallStrings$ do sub_uninstall_msi
 endif
-
-for %uninstallstring% in $UninstallStrings$ do sub_uninstall_msi
-
 
 ; Checks if the string to be searched for is in the uninstall path of the registry. Fills all found refering uninstall keys in the array $UninstallStrings$
 [sub_check_uninstall_key]
@@ -36,19 +32,23 @@ if (not($DisplayName$ = ""))
       LogWarning "Registry value found, but no uninstall string - continuing to search..."
     else
       Set $DoubleFlag$ = "false"
-      for %uninstallstring% in $UninstallStrings$ do sub_check_doubles
+			if (not(count($UninstallStrings$) = "0"))
+				for %uninstallstring% in $UninstallStrings$ do sub_check_doubles
+			endif
       if ($DoubleFlag$ = "false")
         Set $UninstallStrings$ = addtolist($UninstallStrings$, $UninstallString$)
+				;pause "setting FinalUnistalling " + $UninstallString$
       endif
     endif
   endif
 endif
 
-
 ; Prepares the uninstall string to be compatible with OPSI
 [sub_uninstall_msi]
 ;MsiExec.exe /X{251659B0-5D87-41EC-B00B-D414E3713375}
+Set $UninstallCount$ = "1"
 Set $FinalUninstallString$ = stringReplace("%uninstallstring%", "MsiExec.exe", "msiexec")
+;pause "FinalUnistalling " + $FinalUninstallString$
 Winbatch_uninstall_msi
 Sub_check_exitcode
 
@@ -61,6 +61,6 @@ $FinalUninstallString$  /l*v $UninstallLog$ /qb! REBOOT=ReallySuppress
 
 ; Checks if the uninstall string is already in the list. Doubles lead to get OPSI stuck in deinstallation
 [sub_check_doubles]
-if ("%uninstallstring%" = $UninstallString$)
+if ( '%uninstallstring%' = $UninstallString$ )
   Set $DoubleFlag$ = "true"
 endif

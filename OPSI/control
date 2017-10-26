@@ -8,8 +8,8 @@ type: localboot
 id: dfn_atlas.ti
 name: ATLAS.ti
 description: ATLAS.ti ist ein Programm zur Auswertung von qualitativen Daten wie Text, Bild, Audio, Video oder auch GoogleEarth Geodaten.
-advice: Das Programm deinstalliert saemtliche frueeren Versionen von Atlas.ti bei der Installation.
-version: 7.5.15.0
+advice: Das Programm deinstalliert saemtliche frueheren Versionen von Atlas.ti bei der Installation.
+version: 8.0.43.0
 priority: 0
 licenseRequired: True
 productClasses: 
@@ -20,6 +20,18 @@ alwaysScript:
 onceScript: 
 customScript: 
 userLoginScript: 
+
+[ProductProperty]
+type: bool
+name: forcereinstall
+description: Forces deinstallation before installation
+default: False
+
+[ProductProperty]
+type: bool
+name: remove-old-versions
+description: Remove earlier versions on installation or deinstallation
+default: False
 
 [ProductProperty]
 type: bool
@@ -73,6 +85,15 @@ values: [""]
 default: [""]
 
 [Changelog]
+dfn_atlas.ti (8.0.43.0-1) stable; urgency=low
+
+	* Exe getauscht
+	* Bug in sub_check_doubles gefixed
+	* Fehlende Sub_free_license Sektion eingebaut
+	* Abfrage ob Stringliste mit Uninstallstrings leer ist eingebaut, unnötige Warnung verschwindet).
+
+ -- Eric Esser <eric.esser@wzb.eu>  Thu, 26 Oct 2017 16:44:17 +0000
+
 atlas.ti7 (7.1.1-1) testing; urgency=low
 
   * Initial package

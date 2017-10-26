@@ -4,4 +4,4 @@ DefVar $LicenseRequired$
 DefVar $LicenseKey$
 DefVar $LicensePool$
 
-include_append "section_sub_get_licensekey.opsiinc"
+include_append "section_sub_licensekey.opsiinc"

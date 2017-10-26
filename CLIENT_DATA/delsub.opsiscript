@@ -1,0 +1,68 @@
+; This sourcecode published under the Terms of the General Public License.
+; Written by Eric Esser, Wissenschaftszentrum Berlin, eric.esser@wzb.eu.
+; Inspired by uib gmbh (www.uib.de), Thomas Besser (KIT), Detlef Krummel (GEI) and Tobias Friede (Fraunhofer)
+
+
+;==========================================================================================================
+; Includes
+include_insert "insert_uninstall_by_registry.opsiinc"
+
+;==========================================================================================================
+; Variables
+DefVar $CustomPostDeinstall$
+DefVar $UninstallSearchString$
+DefVar $UninstallCount$
+DefVar $remove_old_versions$
+DefVar $forcereinstall$
+DefStringList $UninstallSearchStrings$
+
+Set $UninstallCount$ = "0"
+
+Set $remove_old_versions$ = getProductProperty("remove-old-versions","false")
+Set $forcereinstall$ = getProductProperty("forcereinstall","false")
+
+if ($remove_old_versions$ = "true")
+  Set $UninstallSearchStrings$ = addtolist($UninstallSearchStrings$, "ATLAS.ti")
+  Set $DesktopIconName$ = "ATLAS.ti"
+  LinkFolder_delete
+  Set $DesktopIconName$ = "ATLAS.ti 8.0"
+endif 
+
+if (($forcereinstall$ = "true") or ($uninstall$ = "true"))
+  Set $UninstallSearchStrings$ = addtolist($UninstallSearchStrings$, "ATLAS.ti 8.0")
+  Set $UninstallSearchStrings$ = addtolist($UninstallSearchStrings$, "ATLAS.ti 8.0 Prerequisites")
+  LinkFolder_delete
+endif
+
+
+;==========================================================================================================
+; Program logic
+Message "Uninstalling " + $ProductId$ + " ..."
+
+; Sub function in section_uninstall_by_registry.opsiinc - variable set in commons.opsiinc
+comment "Starting sub_uninstall_by_registry"
+
+if (not(count($UninstallSearchStrings$) = "0"))
+  for %uninstallsearchstring% in $UninstallSearchStrings$ do sub_set_uninstallsearchstring
+
+  if ($UninstallCount$ = "0")
+    LogWarning "No uninstall string found in registry. Please try manual deinstallation on this machine"
+  endif
+
+  ; Free license if licensing module of OPSI is used
+  if (GetProductProperty("kind-of-license" , "testversion" ) = "licensepool")
+  	comment "Licensing required, free license used"
+	  Sub_free_license  
+  endif
+endif
+; Make sure the desktop icon gets deleted as well.
+
+
+; Include post deinstall file in custom folder via OPSI property 
+comment "include custom post deinstall file"
+set $CustomPostDeinstall$ = getProductProperty("custom-post-deinstall","none")
+if not ($CustomPostDeinstall$ = "none")
+	if FileExists("%ScriptPath%\custom\" + $CustomPostDeinstall$)
+		include_insert "%ScriptPath%\custom\" + $CustomPostDeinstall$
+	endif
+endif

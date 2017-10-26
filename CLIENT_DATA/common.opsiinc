@@ -17,9 +17,9 @@ requiredWinstVersion >= "4.11.5.0"
 ;==========================================================================================================
 ; Includes
 include_insert "insert_check_exit_code.opsiinc"
-include_insert "insert_get_licensekey.opsiinc"
+include_insert "insert_sub_licensekey.opsiinc"
+include_append "section_common.opsiinc"
 include_append "section_linkfolder.opsiinc"
-
 ;==========================================================================================================
 ; Variables 
 
@@ -30,11 +30,14 @@ DefVar $MinimumSpace$
 DefVar $InstallDir$
 DefVar $KindOfLicense$ 
 
-DefVar $PathToExe$
 DefVar $DesktopIconName$
 DefVar $Property_DesktopIcon$
 DefVar $ProgramVersion$	
-DefVar $Exe$	
+DefVar $PathToExe$     
+DefVar $ActualExe$	
+DefVar $uninstall$
+
+DefStringList $Exes$	
 
 ;----------------------------------------------------------------------------------------------
 ; USUALLY FOR AN PROGRAM UPDATE THIS IS THE ONLY PLACE WHERE VALUES OUGHT TO BE CHANGED, EXCEPT PUTTING THE OLD MSI-ID TO DELSUB
@@ -43,8 +46,12 @@ DefVar $Exe$
 Set $ProductId$                    = "dfn_atlas.ti"
 Set $PrettyName$		               = "ATLAS.ti"
 Set $MinimumSpace$                 = "500 MB"
-Set $InstallDir$                   = "%ProgramFiles32Dir%\Scientific Software\ATLASti"
-Set $Exe$							             = "atlasti.exe"
+Set $InstallDir$                   = "%ProgramFiles32Dir%\Scientific Software\ATLASti.8"
+Set $ActualExe$										 = "Atlasti8.exe"
+Set $DesktopIconName$ 				 		 = "ATLAS.ti 8.0"
+
+Set $Exes$							           = addtolist($Exes$, $ActualExe$)
+Set $Exes$							           = addtolist($Exes$, "atlasti.exe")
 
 ; There are two more variables to set which are not here, but in setup.opsiscript ($SetupFile$) and uninstall.opsiscript ($UninstallSearchString$)
 ;----------------------------------------------------------------------------------------------
@@ -53,9 +60,8 @@ Set $Exe$							             = "atlasti.exe"
 Set $ProgramVersion$               = strPart("%installingProdVersion%", "1", calculate(strPos("%installingProdVersion%","-") + "-" + "1" ))
 Set $LogDir$                       = "%SystemDrive%\tmp"
 Set $Property_DesktopIcon$         = GetProductProperty("desktopicon", "true")
-Set $DesktopIconName$ 				 		 = $PrettyName$ 
-Set $PathToExe$         				 	 = $InstallDir$ + "\Program\" + $Exe$
-          
+
+Set $PathToExe$         				 	 = $InstallDir$ + "\" + $ActualExe$      
 
 ;==========================================================================================================
 ; Program logic
@@ -63,8 +69,8 @@ Set $PathToExe$         				 	 = $InstallDir$ + "\Program\" + $Exe$
 comment "Show product picture"
 ShowBitmap "%ScriptPath%\" + $ProductId$ + ".png" $PrettyName$
 
-; Kill running task
-Killtask $Exe$
+; Kill running tasks
+for %exe% in $Exes$ do sub_killtask
 
 Set $KindOfLicense$ = GetProductProperty("kind-of-license" , "testversion" )
 Switch $KindOfLicense$

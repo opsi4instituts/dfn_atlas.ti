@@ -2,8 +2,8 @@
 ; Written by Eric Esser, Wissenschaftszentrum Berlin, eric.esser@wzb.eu.
 ; Inspired by uib gmbh (www.uib.de), Thomas Besser (KIT), Detlef Krummel (GEI) and Tobias Friede (Fraunhofer)
 
-
 [Actions]
+
 ;==========================================================================================================
 ; Includes
 include_insert "common.opsiinc"
@@ -12,8 +12,12 @@ include_insert "common.opsiinc"
 ; Variables
 DefVar $CustomPostInstall$
 DefVar $SetupString$ 
+DefVar $SetupStringInstaller$ 
+DefVar $SetupStringPrerequisites$ 
 
-Set $SetupString$ = "%ScriptPath%\a7setup.msi" 
+Set $SetupStringPrerequisites$ = "%ScriptPath%\AtlastiPrerequisites_8.0.msi" 
+Set $SetupStringInstaller$ = "%ScriptPath%\Atlasti_8.0.msi" 
+Set $uninstall$ = "false"
 ;==========================================================================================================
 ; Program logic
 if not(HasMinimumSpace ("%SystemDrive%", $MinimumSpace$))
@@ -21,12 +25,20 @@ if not(HasMinimumSpace ("%SystemDrive%", $MinimumSpace$))
 	isFatalError "No Space"
 	; Stop process and set installation status to failed
 else
+
+  comment "Start uninstall sub section"
+  Sub "%ScriptPath%\delsub.opsiscript"
+
 	Message "Installing " + $ProductId$ + " ..."
 	
 	comment "Start setup program"
 	ChangeDirectory "%SCRIPTPATH%"
 	
+	Set $SetupString$ = $SetupStringPrerequisites$
   if FileExists($SetupString$)
+    Winbatch_install
+	  Sub_check_exitcode
+		Set $SetupString$ = $SetupStringInstaller$
     Winbatch_install
 	  Sub_check_exitcode
 	else
@@ -56,3 +68,5 @@ endif
 
 [Winbatch_install]
 msiexec /i "$SetupString$" /l* "$LogDir$\$ProductId$.install_log.txt" /qb! INSTALLDIR="$InstallDir$" PIDKEY="$LicenseKey$" ALLUSERS=1 REBOOT=ReallySuppress
+
+

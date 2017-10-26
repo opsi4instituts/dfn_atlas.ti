@@ -6,22 +6,18 @@
 ;==========================================================================================================
 ; Includes
 include_insert "common.opsiinc"
-include_insert "insert_uninstall_by_registry.opsiinc"
 
 ;==========================================================================================================
 ; Variables
-DefVar $CustomPostDeinstall$
-DefVar $UninstallSearchString$
+Set $uninstall$ = "true"
 
-Set $UninstallSearchString$ = "ATLAS.ti"
 ;==========================================================================================================
 ; Program logic
 
 Message "Uninstalling " + $ProductId$ + " ..."
 
-; Sub function in section_uninstall_by_registry.opsiinc - variable set in commons.opsiinc
-comment "Starting sub_uninstall_by_registry"
-sub_uninstall_by_registry
+comment "Start uninstall sub section"
+Sub "%ScriptPath%\delsub.opsiscript"
 
 ; Free license if licensing module of OPSI is used
 if (GetProductProperty("kind-of-license" , "testversion" ) = "licensepool")
@@ -40,3 +36,4 @@ if not ($CustomPostDeinstall$ = "none")
 		include_insert "%ScriptPath%\custom\" + $CustomPostDeinstall$
 	endif
 endif
+

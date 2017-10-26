@@ -37,3 +37,8 @@ else
 	isFatalError "No Licensemanagement"
 endif
 
+[Sub_free_license]
+comment "License management is enabled and will be used"
+comment "Trying to free license used for the product"
+DefVar $result$
+Set $result$ = FreeLicense($LicensePool$)
