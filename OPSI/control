@@ -1,5 +1,5 @@
 [Package]
-version: 1
+version: 2
 depends: 
 incremental: False
 
@@ -85,6 +85,12 @@ values: [""]
 default: [""]
 
 [Changelog]
+dfn_atlas.ti (8.0.43.0-2) stable; urgency=low
+
+Bug bei Deinstallation gefixed.
+
+ -- Eric Esser <eric.esser@wzb.eu>  Thu, 26 Oct 2017 18:07:21 +0000
+
 dfn_atlas.ti (8.0.43.0-1) stable; urgency=low
 
 	* Exe getauscht
