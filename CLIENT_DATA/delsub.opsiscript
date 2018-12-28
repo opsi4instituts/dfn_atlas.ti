@@ -18,19 +18,22 @@ DefStringList $UninstallSearchStrings$
 
 Set $UninstallCount$ = "0"
 
-Set $remove_old_versions$ = getProductProperty("remove-old-versions","false")
+Set $remove_old_versions$ = getProductProperty("remove-old-versions","true")
 Set $forcereinstall$ = getProductProperty("forcereinstall","false")
+
+Set $DesktopIconName$ = "ATLAS.ti 8.0"
+LinkFolder_delete
 
 if ($remove_old_versions$ = "true")
   Set $UninstallSearchStrings$ = addtolist($UninstallSearchStrings$, "ATLAS.ti")
   Set $DesktopIconName$ = "ATLAS.ti"
   LinkFolder_delete
-  Set $DesktopIconName$ = "ATLAS.ti 8.0"
+  Set $DesktopIconName$ = "ATLAS.ti 8"
 endif 
 
 if (($forcereinstall$ = "true") or ($uninstall$ = "true"))
-  Set $UninstallSearchStrings$ = addtolist($UninstallSearchStrings$, "ATLAS.ti 8.0")
-  Set $UninstallSearchStrings$ = addtolist($UninstallSearchStrings$, "ATLAS.ti 8.0 Prerequisites")
+  Set $UninstallSearchStrings$ = addtolist($UninstallSearchStrings$, "ATLAS.ti 8.3")
+  ;Set $UninstallSearchStrings$ = addtolist($UninstallSearchStrings$, "ATLAS.ti 8.3 Prerequisites")
   LinkFolder_delete
 endif
 

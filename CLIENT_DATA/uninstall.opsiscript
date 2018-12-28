@@ -25,6 +25,8 @@ if (GetProductProperty("kind-of-license" , "testversion" ) = "licensepool")
 	  Sub_free_license  
 endif
 
+
+
 ; Make sure the desktop icon gets deleted as well.
 LinkFolder_delete
 
@@ -37,3 +39,6 @@ if not ($CustomPostDeinstall$ = "none")
 	endif
 endif
 
+[Registry_delete_licensecode]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\Scientific Software\ATLAS.ti.8\License]
+DeleteVar "LicenseKey"

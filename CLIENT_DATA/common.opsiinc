@@ -37,6 +37,11 @@ DefVar $PathToExe$
 DefVar $ActualExe$	
 DefVar $uninstall$
 
+DefVar $CustomPostInstall$
+DefVar $SetupString$ 
+DefVar $SetupStringInstaller$ 
+;DefVar $SetupStringPrerequisites$ 
+
 DefStringList $Exes$	
 
 ;----------------------------------------------------------------------------------------------
@@ -48,10 +53,14 @@ Set $PrettyName$		               = "ATLAS.ti"
 Set $MinimumSpace$                 = "500 MB"
 Set $InstallDir$                   = "%ProgramFiles32Dir%\Scientific Software\ATLASti.8"
 Set $ActualExe$										 = "Atlasti8.exe"
-Set $DesktopIconName$ 				 		 = "ATLAS.ti 8.0"
+Set $DesktopIconName$ 				 		 = "ATLAS.ti 8"
 
 Set $Exes$							           = addtolist($Exes$, $ActualExe$)
 Set $Exes$							           = addtolist($Exes$, "atlasti.exe")
+
+;Set $SetupStringPrerequisites$     = "%ScriptPath%\AtlastiPrerequisites_8.0.msi" 
+Set $SetupStringInstaller$         = "%ScriptPath%\Atlasti_8.3.msi" 
+Set $uninstall$                    = "false"
 
 ; There are two more variables to set which are not here, but in setup.opsiscript ($SetupFile$) and uninstall.opsiscript ($UninstallSearchString$)
 ;----------------------------------------------------------------------------------------------

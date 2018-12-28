@@ -1,5 +1,5 @@
 [Package]
-version: 2
+version: 1
 depends: 
 incremental: False
 
@@ -9,7 +9,7 @@ id: dfn_atlas.ti
 name: ATLAS.ti
 description: ATLAS.ti ist ein Programm zur Auswertung von qualitativen Daten wie Text, Bild, Audio, Video oder auch GoogleEarth Geodaten.
 advice: Das Programm deinstalliert saemtliche frueheren Versionen von Atlas.ti bei der Installation.
-version: 8.0.43.0
+version: 8.3.20
 priority: 0
 licenseRequired: True
 productClasses: 
@@ -85,6 +85,15 @@ values: [""]
 default: [""]
 
 [Changelog]
+dfn_atlas.ti (8.3.20-1) stable; urgency=low
+
+* Update auf 8.3
+* AtlastiPrerequisites_8.x.msi entfernt (erstmal auskommentiert)
+* Variablen aus setup.opsiscript nach common.opsiinc verschoben
+* Lizenzierung über Registryeintrag
+
+ -- Eric Esser <eric.esser@wzb.eu>  Thu, 27 Dec 2018 14:20:57 +0000
+
 dfn_atlas.ti (8.0.43.0-2) stable; urgency=low
 
 Bug bei Deinstallation gefixed.

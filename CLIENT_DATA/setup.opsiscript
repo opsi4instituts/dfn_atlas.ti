@@ -9,16 +9,6 @@
 include_insert "common.opsiinc"
 
 ;==========================================================================================================
-; Variables
-DefVar $CustomPostInstall$
-DefVar $SetupString$ 
-DefVar $SetupStringInstaller$ 
-DefVar $SetupStringPrerequisites$ 
-
-Set $SetupStringPrerequisites$ = "%ScriptPath%\AtlastiPrerequisites_8.0.msi" 
-Set $SetupStringInstaller$ = "%ScriptPath%\Atlasti_8.0.msi" 
-Set $uninstall$ = "false"
-;==========================================================================================================
 ; Program logic
 if not(HasMinimumSpace ("%SystemDrive%", $MinimumSpace$))
 	LogError "Not enough space on %SystemDrive%, " + $MinimumSpace$ + " on drive %SystemDrive% needed for " + $ProductId$
@@ -34,13 +24,15 @@ else
 	comment "Start setup program"
 	ChangeDirectory "%SCRIPTPATH%"
 	
-	Set $SetupString$ = $SetupStringPrerequisites$
+	;Set $SetupString$ = $SetupStringPrerequisites$
+	Set $SetupString$ = $SetupStringInstaller$
   if FileExists($SetupString$)
     Winbatch_install
 	  Sub_check_exitcode
-		Set $SetupString$ = $SetupStringInstaller$
-    Winbatch_install
-	  Sub_check_exitcode
+;		Set $SetupString$ = $SetupStringInstaller$
+;   Winbatch_install
+;	  Sub_check_exitcode
+    Registry_enter_licensecode /SysNative
 	else
 	  LogError "No setup file found, please check the OPSI package"
 	  isFatalError "No Setup file found"
@@ -67,6 +59,9 @@ endif
 ; Functions
 
 [Winbatch_install]
+;msiexec /i "$SetupString$" /l* "$LogDir$\$ProductId$.install_log.txt" /qb! INSTALLDIR="$InstallDir$" PIDKEY="$LicenseKey$" ALLUSERS=1 REBOOT=ReallySuppress
 msiexec /i "$SetupString$" /l* "$LogDir$\$ProductId$.install_log.txt" /qb! INSTALLDIR="$InstallDir$" PIDKEY="$LicenseKey$" ALLUSERS=1 REBOOT=ReallySuppress
 
-
+[Registry_enter_licensecode]
+openkey [HKEY_LOCAL_MACHINE\SOFTWARE\Scientific Software\ATLAS.ti.8\License]
+set "LicenseKey" = REG_SZ:"$LicenseKey$"
